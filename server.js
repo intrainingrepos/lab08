@@ -15,10 +15,10 @@ app.use(cors());
 
 // API Routes
 app.get('/location', (request, response) => {
-  console.log('location route hit');
+  // console.log('location route hit');
   searchToLatLong(request.query.data)
     .then(location => { 
-      console.log('this is our location', location);
+      // console.log('this is our location', location);
      return response.send(location)
     })
     .catch(error => handleError(error, response));
@@ -75,15 +75,15 @@ function Movie(movie) {
 function Meetups(meetups) {
   this.link = meetups.link;
   this.name = meetups.name;
-  this.host = meetups.host;
-  this.creation_date = meetups.creation_date;
+  this.host = meetups.group.name;
+  this.creation_date = meetups.created;
 }
 
 // Helper Functions
 function searchToLatLong(query) {
-  console.log('this is our query', query);
+  // console.log('this is our query', query);
   const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${query}&key=${process.env.GEOCODE_API_KEY}`;
-  console.log('this is the url', url);
+  // console.log('this is the url', url);
   return superagent.get(url)
     .then((res) => {
       return new Location(query, res);
@@ -107,35 +107,46 @@ function getWeather(request, response) {
 }
 
 function getRestaurant(request, response) { 
-  console.log('restaurant function called')
+  // console.log('restaurant function called')
   const url = `https://api.yelp.com/v3/businesses/search?term=restaurants&latitude=${request.query.data.latitude}&longitude=${request.query.data.longitude}`;
   superagent.get(url)
             .set('Authorization', `Bearer ${process.env.YELP_API_KEY}`)
             .then((yelp_API_response) =>  { 
-              console.log('getting stuff');
+              // console.log('getting stuff');
               const yelpSummaries = yelp_API_response.body.businesses.map(restaurant => {
                 return new Yelp(restaurant);
               });
-              console.log('new rest', yelp_API_response);
+              // console.log('new rest', yelp_API_response);
               response.send(yelpSummaries);
-              console.log('summaries', yelpSummaries);
+              // console.log('summaries', yelpSummaries);
             })
             .catch(error => handleError(error, response));
 }
 
 function getMovies(request, response) {
-  const url = `https://api.themoviedb.org/3/search/movie?query=${request.query.data.search_query}&api_key=${process.env.MOVIEDB_API_KEY}`
+  const url = `https://api.themoviedb.org/3/search/movie?query=${request.query.data.search_query}&api_key=${process.env.MOVIEDB_API_KEY}`;
 	superagent.get(url)
 	          .then(result => {
-		          const movieSummaries = result.body.results.map( movie => {
+		          const movieSummaries = result.body.results.map(movie => {
 			          return new Movie(movie);
               });
-              console.log('see movies', result);
+              // console.log('see movies', result);
 	            response.send(movieSummaries);
 	          })
 	          .catch(error => handleError(error, response));
 }
 
 function getMeetups(request, response) {
-  const url = 
+  const url = `https://api.meetup.com/find/upcoming_events?&latitude=${request.query.data.latitude}&longitude=${request.query.data.longitude}&key=${process.env.MEETUPS_API_KEY}`;
+  superagent.get(url)
+            .then(result => {
+              console.log(result.body);
+              const meetupsSummaries = result.body.events.map(meetups => {
+                // console.log('IN MAP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+                return new Meetups(meetups);
+              });
+              console.log('see meetups', meetupsSummaries);
+              response.send(meetupsSummaries);
+            })
+            .catch(error => handleError(error, response));
 }
