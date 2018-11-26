@@ -79,6 +79,7 @@ function Meetups(meetups) {
   this.name = meetups.name;
   this.host = meetups.group.name;
   this.creation_date = meetups.created;
+  this.creation_date = new Date(meetup.created).toString().slice(0,15);
 }
 
 function Trails(hiking) {
