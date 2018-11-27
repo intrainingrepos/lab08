@@ -41,3 +41,23 @@ Start time: 12:30pm
 Finish time: 1:30pm
 
 Actual time needed to complete: 1 hour
+
+## Number and name of feature: Feature #1: Caching dataion
+
+Estimate of time needed to complete: 1 hour
+
+Start time: 10:30am
+
+Finish time: 12:10pm
+
+Actual time needed to complete: 1 hour 40 minutes
+
+## Number and name of feature: Retrieve Meetup information
+
+Estimate of time needed to complete: 2 hours
+
+Start time: 12:25pm
+
+Finish time: 
+
+Actual time needed to complete: 
