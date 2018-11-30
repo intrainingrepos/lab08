@@ -16,7 +16,6 @@ app.use(cors());
 
 // Database configuration 
 const client = new pg.Client(process.env.DATABASE_URL);
-// DATABASE_URL=postgres://USER:PASSWORD@HOST:5432/city_explorer
 client.connect();
 client.on ('error', err => console.error(err));
 
